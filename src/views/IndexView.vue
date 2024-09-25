@@ -15,7 +15,7 @@
 				<el-descriptions-item label="过期时间">{{ Expirationtime }}</el-descriptions-item>
 			</el-descriptions>
 
-			<el-alert title="下级填写你的推荐码,你可自动获得10天VIP,同时下级也可以获得5天VIP等级" type="success" :closable="false" />
+			<el-alert title="下级填写你的推荐码,你和下级同时获得3天VIP等级" type="success" :closable="false" />
 			<el-button type="danger">直接购买VIP</el-button>
 		</el-card>
 
