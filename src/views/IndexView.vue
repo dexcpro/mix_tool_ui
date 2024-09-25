@@ -81,7 +81,7 @@
 	const user = async () => {
 		try {
 			// 打开调试
-			eruda.init();
+			// eruda.init();
 
 			fullscreenLoading.value = true;
 			urlEncodedString.value = window.Telegram.WebApp.initData;
