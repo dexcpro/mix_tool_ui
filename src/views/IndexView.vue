@@ -1,6 +1,25 @@
 <template>
 	<div v-loading.fullscreen="fullscreenLoading" class="footer">
-		<el-card class="reging">
+		<el-card v-if="Account" class="reging">
+			<el-descriptions :column="1" border title="用户信息">
+				<el-descriptions-item label="用户ID">{{ mac }}</el-descriptions-item>
+				<el-descriptions-item label="用户等级">
+					<el-tag style="font-weight: bold" v-if="vip" type="success" effect="dark">👑 VIP用户 </el-tag>
+					<el-tag style="font-weight: bold" v-else type="info" effect="dark">普通用户 </el-tag>
+				</el-descriptions-item>
+				<el-descriptions-item label="推荐码">
+					<div class="code">
+						<span>{{ Referralcode }} </span> <el-icon @click="copyText" style="color: #f56c6c"><DocumentCopy /></el-icon>
+					</div>
+				</el-descriptions-item>
+				<el-descriptions-item label="过期时间">{{ Expirationtime }}</el-descriptions-item>
+			</el-descriptions>
+
+			<el-alert title="下级填写你的推荐码,你可自动获得10天VIP,同时下级也可以获得5天VIP等级" type="success" :closable="false" />
+			<el-button type="danger">直接购买VIP</el-button>
+		</el-card>
+
+		<el-card v-else class="reging">
 			<template #header>绑定账号</template>
 			<el-form ref="ruleFormRef" :model="ruleForm" status-icon :rules="rules" label-width="auto" class="demo-ruleForm">
 				<el-form-item label="机器码:" prop="mac">
@@ -12,23 +31,17 @@
 			</el-form>
 			<el-alert title="机器码请点击软件右上角图标复制" type="success" :closable="false" />
 			<el-alert title="填写推荐码可获得5天VIP" type="error" :closable="false" />
-			<el-button type="danger">绑定机器码</el-button>
-		</el-card>
-		<el-card class="reging">
-			<template #header>用户信息</template>
-			<div>机器码:XXXXXXXXXXX</div>
-			<div>用户等级:</div>
-			<div>推荐码:</div>
-			<el-alert title="下级填写你的推荐码,你可自动获得10天VIP,同时下级也可以获得5天VIP等级" type="success" :closable="false" />
-			<el-button type="danger">直接购买VIP</el-button>
+			<el-button type="danger" @click="binding" :loading="loading">绑定机器码</el-button>
 		</el-card>
 	</div>
 </template>
 <script setup>
-	import { ref, reactive } from "vue";
+	import { ref, reactive, onMounted, getCurrentInstance } from "vue";
 	import store from "./../store";
 	import { axiosInstance } from "@/api/post";
 	import eruda from "eruda";
+	import moment from "moment";
+	const { proxy } = getCurrentInstance();
 	const rig = ref(false);
 	const ruleForm = reactive({
 		mac: "",
@@ -44,10 +57,26 @@
 			},
 		],
 	});
-
+	const Account = ref(false);
 	const name = ref(null);
 	const fullscreenLoading = ref(false);
+	const loading = ref(false);
 	// 先查询  有没有绑定 只返回true或者false
+	const urlEncodedString = ref(null);
+	const mac = ref(null);
+	const Referralcode = ref(null);
+	const vip = ref(false);
+	const Expirationtime = ref(null);
+	const copyText = () => {
+		navigator.clipboard
+			.writeText(Referralcode.value)
+			.then(() => {
+				proxy.$message.success("复制成功!");
+			})
+			.catch(() => {
+				proxy.$message.error("复制失败");
+			});
+	};
 
 	const user = async () => {
 		try {
@@ -55,19 +84,30 @@
 			eruda.init();
 
 			fullscreenLoading.value = true;
-			let urlEncodedString = window.Telegram.WebApp.initData;
+			urlEncodedString.value = window.Telegram.WebApp.initData;
 			window.Telegram.WebApp.setHeaderColor("#6a4c41");
 			window.Telegram.WebApp.setBackgroundColor("#6a4c41");
-			const decodedString = decodeURIComponent(urlEncodedString);
+			// const decodedString = decodeURIComponent(urlEncodedString);
 
-			const params = Object.fromEntries(new URLSearchParams(decodedString));
-			params.user = JSON.parse(params.user);
-			let response = await axiosInstance.post("topup", { tgid: params.user.id });
+			// const params = Object.fromEntries(new URLSearchParams(decodedString));
+			// params.user = JSON.parse(params.user);
+			let response = await axiosInstance.post("Query/my", urlEncodedString.value);
+			console.log(response.data);
+			if (response.data) {
+				// 已经绑定 显示后面的
+				// 没有绑定 显示前面的 默认
+				Account.value = true;
+				mac.value = response.data.tgid;
+				Referralcode.value = response.data.Referralcode;
+				if (Date.now() < response.data.endtime * 1000) {
+					// 是VIP
+					vip.value = true;
+					Expirationtime.value = moment(response.data.endtime * 1000).format("YYYY-MM-DD HH:mm:ss");
+				}
 
-			//
+				//
+			}
 
-			// 提取 JSON 部分
-			// this.name = params.user.first_name + params.user.last_name;
 			fullscreenLoading.value = false;
 			window.Telegram.WebApp.ready();
 
@@ -76,7 +116,22 @@
 			console.log(error);
 		}
 	};
+	const ruleFormRef = ref(null);
+	const binding = async () => {
+		try {
+			loading.value = true;
+			await ruleFormRef.value.validate();
+			let response = await axiosInstance.post("Create/binding", { sing: urlEncodedString.value, info: ruleForm });
+			console.log(response.data);
+			// loading.value = false;
+		} catch (error) {
+			console.log(error);
+		}
+	};
 
+	onMounted(() => {
+		user();
+	});
 	// 进来就先获取用户信息 上传TGid 即可  获取不到 就让绑定账户
 </script>
 <style lang="scss">
