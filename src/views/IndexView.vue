@@ -123,7 +123,8 @@
 			await ruleFormRef.value.validate();
 			let response = await axiosInstance.post("Create/binding", { sing: urlEncodedString.value, info: ruleForm });
 			console.log(response.data);
-			// loading.value = false;
+			loading.value = false;
+			user();
 		} catch (error) {
 			console.log(error);
 		}
