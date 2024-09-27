@@ -121,7 +121,7 @@
 			// 打开调试
 			// eruda.init();
 
-			// fullscreenLoading.value = true;
+			fullscreenLoading.value = true;
 			urlEncodedString.value = window.Telegram.WebApp.initData;
 			window.Telegram.WebApp.setHeaderColor("#6a4c41");
 			window.Telegram.WebApp.setBackgroundColor("#6a4c41");
@@ -152,6 +152,7 @@
 
 			// 注册
 		} catch (error) {
+			fullscreenLoading.value = false;
 			console.log(error);
 		}
 	};
