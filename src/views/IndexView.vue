@@ -27,7 +27,7 @@
 						<span>{{ Referralcode }} </span> <el-icon @click="copyText" style="color: #f56c6c"><DocumentCopy /></el-icon>
 					</div>
 				</el-descriptions-item>
-				<el-descriptions-item label="过期时间">{{ Expirationtime }}</el-descriptions-item>
+				<el-descriptions-item v-if="vip" label="过期时间">{{ Expirationtime }}</el-descriptions-item>
 			</el-descriptions>
 
 			<el-alert title="下级填写你的推荐码,你和下级同时获得3天VIP等级" type="success" :closable="false" />
