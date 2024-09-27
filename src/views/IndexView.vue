@@ -119,7 +119,7 @@
 	const user = async () => {
 		try {
 			// 打开调试
-			// eruda.init();
+			eruda.init();
 
 			fullscreenLoading.value = true;
 			urlEncodedString.value = window.Telegram.WebApp.initData;
@@ -137,6 +137,7 @@
 				Account.value = true;
 				mac.value = response.data.tgid;
 				admin.value = response.data.admin;
+				console.log(admin.value);
 				Referralcode.value = response.data.Referralcode;
 				if (Date.now() < response.data.endtime * 1000) {
 					// 是VIP
