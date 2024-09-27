@@ -173,8 +173,10 @@
 			await updataRef.value.validate();
 			let response = await axiosInstance.post("Update/UpdateVIP", { sing: urlEncodedString.value, day: updata.day, mac: updata.day });
 			proxy.$message.success("添加成功!");
+			console.log(response);
 			loading.value = false;
 		} catch (error) {
+			console.log(error);
 			proxy.$message.error("添加失败");
 			loading.value = false;
 		}
