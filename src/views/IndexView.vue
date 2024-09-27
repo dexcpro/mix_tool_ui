@@ -19,7 +19,7 @@
 			<el-button type="danger">直接购买VIP</el-button>
 		</el-card>
 
-		<el-card v-else class="reging">
+		<el-card v-else-if="!admin" class="reging">
 			<template #header>绑定账号</template>
 			<el-form ref="ruleFormRef" :model="ruleForm" status-icon :rules="rules" label-width="auto" class="demo-ruleForm">
 				<el-form-item label="机器码:" prop="mac">
@@ -33,6 +33,21 @@
 			<el-alert title="填写推荐码可获得3天VIP" type="error" :closable="false" />
 			<el-button type="danger" @click="binding" :loading="loading">绑定机器码</el-button>
 		</el-card>
+
+		<el-card v-else class="regings">
+			<template #header>管理后台</template>
+			<el-form ref="updataRef" :model="updata" status-icon :rules="updatarules" label-width="auto" class="demo-ruleForm">
+				<el-form-item label="机器码:" prop="mac">
+					<el-input v-model="updata.mac" autocomplete="off" placeholder="请输入机器码" />
+				</el-form-item>
+				<el-form-item label="增加天数:" prop="day">
+					<el-input v-model="updata.day" style="max-width: 600px" placeholder="请输入天数">
+						<template #append>天</template>
+					</el-input>
+				</el-form-item>
+			</el-form>
+			<el-button type="danger" @click="UpdateVIP" :loading="loading">增加VIP天数</el-button>
+		</el-card>
 	</div>
 </template>
 <script setup>
@@ -43,6 +58,10 @@
 	import moment from "moment";
 	const { proxy } = getCurrentInstance();
 	const rig = ref(false);
+	const updata = reactive({
+		mac: "",
+		day: "",
+	});
 	const ruleForm = reactive({
 		mac: "",
 		superiorid: "",
@@ -57,6 +76,25 @@
 			},
 		],
 	});
+	const updatarules = reactive({
+		mac: [
+			{ required: true, message: "请输入机器码", trigger: "blur" },
+			{
+				pattern: /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/,
+				message: "机器码格式不正确",
+				trigger: "blur",
+			},
+		],
+		day: [
+			{ required: true, message: "请输入天数", trigger: "blur" },
+			{
+				type: "number",
+				message: "输入的值必须是数字",
+				trigger: "blur",
+			},
+		],
+	});
+	const admin = ref(false);
 	const Account = ref(false);
 	const name = ref(null);
 	const fullscreenLoading = ref(false);
@@ -83,7 +121,7 @@
 			// 打开调试
 			// eruda.init();
 
-			fullscreenLoading.value = true;
+			// fullscreenLoading.value = true;
 			urlEncodedString.value = window.Telegram.WebApp.initData;
 			window.Telegram.WebApp.setHeaderColor("#6a4c41");
 			window.Telegram.WebApp.setBackgroundColor("#6a4c41");
@@ -98,6 +136,7 @@
 				// 没有绑定 显示前面的 默认
 				Account.value = true;
 				mac.value = response.data.tgid;
+				admin.value = response.data.admin;
 				Referralcode.value = response.data.Referralcode;
 				if (Date.now() < response.data.endtime * 1000) {
 					// 是VIP
@@ -130,6 +169,19 @@
 			console.log(error);
 		}
 	};
+	const updataRef = ref(null);
+	const UpdateVIP = async () => {
+		try {
+			loading.value = true;
+			await updataRef.value.validate();
+			let response = await axiosInstance.post("Update/UpdateVIP", { sing: urlEncodedString.value, day: updata.day, mac: updata.day });
+			proxy.$message.success("添加成功!");
+			loading.value = false;
+		} catch (error) {
+			proxy.$message.error("添加失败");
+			loading.value = false;
+		}
+	};
 
 	onMounted(() => {
 		user();
@@ -159,6 +211,20 @@
 			}
 			.demo-ruleForm .el-form-item:last-child {
 				margin-bottom: 0px;
+			}
+		}
+		.regings {
+			width: 80vw;
+			.el-card__body {
+				display: flex;
+				flex-direction: column;
+				gap: 10px;
+			}
+			.el-card__header {
+				text-align: center;
+				padding: 10px !important;
+				font-weight: bold;
+				color: #555555b0;
 			}
 		}
 		/* opacity: 0.3; */
