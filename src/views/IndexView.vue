@@ -135,6 +135,7 @@
 				// 已经绑定 显示后面的
 				// 没有绑定 显示前面的 默认
 				Account.value = true;
+				console.log(Account.value);
 				mac.value = response.data.tgid;
 				admin.value = response.data.admin == 1 ? true : false;
 				console.log(admin.value);
