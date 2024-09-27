@@ -171,9 +171,10 @@
 		try {
 			loading.value = true;
 			await updataRef.value.validate();
-			let response = await axiosInstance.post("Update/UpdateVIP", { sing: urlEncodedString.value, day: updata.day, mac: updata.mac });
-			proxy.$message.success("添加成功!");
-			console.log(response);
+			let { data } = await axiosInstance.post("Update/UpdateVIP", { sing: urlEncodedString.value, day: updata.day, mac: updata.mac });
+			const time = moment(data.data * 1000).format("YYYY-MM-DD HH:mm:ss");
+			proxy.$message.success(`添加成功!过期时间${time}`);
+			console.log(data.data);
 			loading.value = false;
 		} catch (error) {
 			console.log(error);
