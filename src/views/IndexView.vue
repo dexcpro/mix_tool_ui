@@ -126,6 +126,7 @@
 			loading.value = false;
 			user();
 		} catch (error) {
+			loading.value = false;
 			console.log(error);
 		}
 	};
