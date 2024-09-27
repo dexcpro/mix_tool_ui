@@ -30,7 +30,7 @@
 				</el-form-item>
 			</el-form>
 			<el-alert title="机器码请点击软件右上角图标复制" type="success" :closable="false" />
-			<el-alert title="填写推荐码可获得5天VIP" type="error" :closable="false" />
+			<el-alert title="填写推荐码可获得3天VIP" type="error" :closable="false" />
 			<el-button type="danger" @click="binding" :loading="loading">绑定机器码</el-button>
 		</el-card>
 	</div>
