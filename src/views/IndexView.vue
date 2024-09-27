@@ -136,7 +136,7 @@
 				// 没有绑定 显示前面的 默认
 				Account.value = true;
 				mac.value = response.data.tgid;
-				admin.value = response.data.admin;
+				admin.value = response.data.admin == 1 ? true : false;
 				console.log(admin.value);
 				Referralcode.value = response.data.Referralcode;
 				if (Date.now() < response.data.endtime * 1000) {
