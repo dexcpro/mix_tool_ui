@@ -111,7 +111,7 @@
 	const user = async () => {
 		try {
 			// 打开调试
-			eruda.init();
+			// eruda.init();
 
 			fullscreenLoading.value = true;
 			urlEncodedString.value = window.Telegram.WebApp.initData;
@@ -163,7 +163,6 @@
 		} catch (error) {
 			proxy.$message.error("绑定失败");
 			loading.value = false;
-			console.log(error);
 		}
 	};
 	const updataRef = ref(null);
@@ -174,10 +173,9 @@
 			let { data } = await axiosInstance.post("Update/UpdateVIP", { sing: urlEncodedString.value, day: updata.day, mac: updata.mac });
 			const time = moment(data.data * 1000).format("YYYY-MM-DD HH:mm:ss");
 			proxy.$message.success(`添加成功!过期时间${time}`);
-			console.log(data.data);
+
 			loading.value = false;
 		} catch (error) {
-			console.log(error);
 			proxy.$message.error("添加失败");
 			loading.value = false;
 		}
