@@ -171,7 +171,7 @@
 		try {
 			loading.value = true;
 			await updataRef.value.validate();
-			let response = await axiosInstance.post("Update/UpdateVIP", { sing: urlEncodedString.value, day: updata.day, mac: updata.day });
+			let response = await axiosInstance.post("Update/UpdateVIP", { sing: urlEncodedString.value, day: updata.day, mac: updata.mac });
 			proxy.$message.success("添加成功!");
 			console.log(response);
 			loading.value = false;
