@@ -119,7 +119,7 @@
 	const user = async () => {
 		try {
 			// 打开调试
-			eruda.init();
+			// eruda.init();
 
 			fullscreenLoading.value = true;
 			urlEncodedString.value = window.Telegram.WebApp.initData;
@@ -166,8 +166,10 @@
 			let response = await axiosInstance.post("Create/binding", { sing: urlEncodedString.value, info: ruleForm });
 			console.log(response.data);
 			loading.value = false;
+			proxy.$message.success("绑定成功!");
 			user();
 		} catch (error) {
+			proxy.$message.error("绑定失败");
 			loading.value = false;
 			console.log(error);
 		}
