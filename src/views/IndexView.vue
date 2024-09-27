@@ -18,23 +18,7 @@
 			<el-alert title="下级填写你的推荐码,你和下级同时获得3天VIP等级" type="success" :closable="false" />
 			<el-button type="danger">直接购买VIP</el-button>
 		</el-card>
-
-		<el-card v-else-if="!admin" class="reging">
-			<template #header>绑定账号</template>
-			<el-form ref="ruleFormRef" :model="ruleForm" status-icon :rules="rules" label-width="auto" class="demo-ruleForm">
-				<el-form-item label="机器码:" prop="mac">
-					<el-input v-model="ruleForm.mac" autocomplete="off" />
-				</el-form-item>
-				<el-form-item label="推荐ID:">
-					<el-input v-model="ruleForm.superiorid" type="password" autocomplete="off" />
-				</el-form-item>
-			</el-form>
-			<el-alert title="机器码请点击软件右上角图标复制" type="success" :closable="false" />
-			<el-alert title="填写推荐码可获得3天VIP" type="error" :closable="false" />
-			<el-button type="danger" @click="binding" :loading="loading">绑定机器码</el-button>
-		</el-card>
-
-		<el-card v-else class="regings">
+		<el-card v-else-if="admin" class="regings">
 			<template #header>管理后台</template>
 			<el-form ref="updataRef" :model="updata" status-icon :rules="updatarules" label-width="auto" class="demo-ruleForm">
 				<el-form-item label="机器码:" prop="mac">
@@ -47,6 +31,20 @@
 				</el-form-item>
 			</el-form>
 			<el-button type="danger" @click="UpdateVIP" :loading="loading">增加VIP天数</el-button>
+		</el-card>
+		<el-card v-else class="reging">
+			<template #header>绑定账号</template>
+			<el-form ref="ruleFormRef" :model="ruleForm" status-icon :rules="rules" label-width="auto" class="demo-ruleForm">
+				<el-form-item label="机器码:" prop="mac">
+					<el-input v-model="ruleForm.mac" autocomplete="off" />
+				</el-form-item>
+				<el-form-item label="推荐ID:">
+					<el-input v-model="ruleForm.superiorid" type="password" autocomplete="off" />
+				</el-form-item>
+			</el-form>
+			<el-alert title="机器码请点击软件右上角图标复制" type="success" :closable="false" />
+			<el-alert title="填写推荐码可获得3天VIP" type="error" :closable="false" />
+			<el-button type="danger" @click="binding" :loading="loading">绑定机器码</el-button>
 		</el-card>
 	</div>
 </template>
