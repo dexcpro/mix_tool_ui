@@ -6,7 +6,7 @@
 				<el-form-item label="机器码:" prop="mac">
 					<el-input v-model="updata.mac" autocomplete="off" placeholder="请输入机器码" />
 				</el-form-item>
-				<el-form-item label="增加天数:" prop="day">
+				<el-form-item label="增加天数:">
 					<el-input v-model="updata.day" style="max-width: 600px" placeholder="请输入天数">
 						<template #append>天</template>
 					</el-input>
@@ -82,14 +82,6 @@
 			{
 				pattern: /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/,
 				message: "机器码格式不正确",
-				trigger: "blur",
-			},
-		],
-		day: [
-			{ required: true, message: "请输入天数", trigger: "blur" },
-			{
-				type: "number",
-				message: "输入的值必须是数字",
 				trigger: "blur",
 			},
 		],
