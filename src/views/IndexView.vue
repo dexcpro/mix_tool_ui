@@ -1,6 +1,21 @@
 <template>
 	<div v-loading.fullscreen="fullscreenLoading" class="footer">
-		<el-card v-if="Account" class="reging">
+		<el-card v-if="admin" class="regings">
+			<template #header>管理后台</template>
+			<el-form ref="updataRef" :model="updata" status-icon :rules="updatarules" label-width="auto" class="demo-ruleForm">
+				<el-form-item label="机器码:" prop="mac">
+					<el-input v-model="updata.mac" autocomplete="off" placeholder="请输入机器码" />
+				</el-form-item>
+				<el-form-item label="增加天数:" prop="day">
+					<el-input v-model="updata.day" style="max-width: 600px" placeholder="请输入天数">
+						<template #append>天</template>
+					</el-input>
+				</el-form-item>
+			</el-form>
+			<el-button type="danger" @click="UpdateVIP" :loading="loading">增加VIP天数</el-button>
+		</el-card>
+
+		<el-card v-else="Account" class="reging">
 			<el-descriptions :column="1" border title="用户信息">
 				<el-descriptions-item label="用户ID">{{ mac }}</el-descriptions-item>
 				<el-descriptions-item label="用户等级">
@@ -18,20 +33,7 @@
 			<el-alert title="下级填写你的推荐码,你和下级同时获得3天VIP等级" type="success" :closable="false" />
 			<el-button type="danger">直接购买VIP</el-button>
 		</el-card>
-		<el-card v-else-if="admin" class="regings">
-			<template #header>管理后台</template>
-			<el-form ref="updataRef" :model="updata" status-icon :rules="updatarules" label-width="auto" class="demo-ruleForm">
-				<el-form-item label="机器码:" prop="mac">
-					<el-input v-model="updata.mac" autocomplete="off" placeholder="请输入机器码" />
-				</el-form-item>
-				<el-form-item label="增加天数:" prop="day">
-					<el-input v-model="updata.day" style="max-width: 600px" placeholder="请输入天数">
-						<template #append>天</template>
-					</el-input>
-				</el-form-item>
-			</el-form>
-			<el-button type="danger" @click="UpdateVIP" :loading="loading">增加VIP天数</el-button>
-		</el-card>
+
 		<el-card v-else class="reging">
 			<template #header>绑定账号</template>
 			<el-form ref="ruleFormRef" :model="ruleForm" status-icon :rules="rules" label-width="auto" class="demo-ruleForm">
