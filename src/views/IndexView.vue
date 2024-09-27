@@ -15,7 +15,7 @@
 			<el-button type="danger" @click="UpdateVIP" :loading="loading">增加VIP天数</el-button>
 		</el-card>
 
-		<el-card v-else="Account" class="reging">
+		<el-card v-else-if="Account" class="reging">
 			<el-descriptions :column="1" border title="用户信息">
 				<el-descriptions-item label="用户ID">{{ mac }}</el-descriptions-item>
 				<el-descriptions-item label="用户等级">
